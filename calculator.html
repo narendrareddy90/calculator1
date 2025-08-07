@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Basic Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <button class="btn" data-value="7">7</button>
+      <button class="btn" data-value="8">8</button>
+      <button class="btn" data-value="9">9</button>
+      <button class="btn operator" data-value="/">÷</button>
+
+      <button class="btn" data-value="4">4</button>
+      <button class="btn" data-value="5">5</button>
+      <button class="btn" data-value="6">6</button>
+      <button class="btn operator" data-value="*">×</button>
+
+      <button class="btn" data-value="1">1</button>
+      <button class="btn" data-value="2">2</button>
+      <button class="btn" data-value="3">3</button>
+      <button class="btn operator" data-value="-">−</button>
+
+      <button class="btn" data-value="0">0</button>
+      <button class="btn" data-value=".">.</button>
+      <button class="btn clear" data-value="C">C</button>
+      <button class="btn operator" data-value="+">+</button>
+
+      <button class="btn equal" data-value="=">=</button>
+    </div>
+  </div>
+  <script>
+    const display = document.getElementById("display");
+const buttons = document.querySelectorAll(".btn");
+
+let currentInput = "";
+let previousInput = "";
+let operator = "";
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const value = button.getAttribute("data-value");
+
+    if (value === "C") {
+      clearDisplay();
+    } else if (value === "=") {
+      calculateResult();
+    } else if (["+", "-", "*", "/"].includes(value)) {
+      setOperator(value);
+    } else {
+      appendValue(value);
+    }
+  });
+});
+
+function clearDisplay() {
+  currentInput = "";
+  previousInput = "";
+  operator = "";
+  display.textContent = "0";
+}
+
+function appendValue(value) {
+  if (currentInput.includes(".") && value === ".") return;
+  currentInput += value;
+  display.textContent = currentInput;
+}
+
+function setOperator(op) {
+  if (currentInput === "") return;
+  if (previousInput !== "") calculateResult();
+  operator = op;
+  previousInput = currentInput;
+  currentInput = "";
+}
+
+function calculateResult() {
+  if (previousInput === "" || currentInput === "") return;
+  let result;
+  const prev = parseFloat(previousInput);
+  const curr = parseFloat(currentInput);
+
+  switch (operator) {
+    case "+":
+      result = prev + curr;
+      break;
+    case "-":
+      result = prev - curr;
+      break;
+    case "*":
+      result = prev * curr;
+      break;
+    case "/":
+      result = prev / curr;
+      break;
+    default:
+      return;
+  }
+
+  display.textContent = result.toString();
+  previousInput = result.toString();
+  currentInput = "";
+  operator = "";
+}
+  </script>
+</body>
+</html>
